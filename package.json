@@ -1,0 +1,81 @@
+{
+  "name": "vite-plugin-vue-component-meta",
+  "version": "0.0.1",
+  "packageManager": "pnpm@10.9.0",
+  "description": "Plugin that generates Vue components meta data using vue-component-meta",
+  "author": "trailskr",
+  "license": "MIT",
+  "homepage": "https://github.com/trailskr/vite-plugin-vue-component-meta",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trailskr/vite-plugin-vue-component-meta"
+  },
+  "bugs": "https://github.com/trailskr/vite-plugin-vue-component-meta",
+  "exports": {
+    "./client": {
+      "types": "./client.d.ts"
+    },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "main": "dist/index.mjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "client.d.ts",
+    "dist"
+  ],
+  "scripts": {
+    "dev": "npm run build -- --watch",
+    "build": "tsup --clean --dts",
+    "prepublishOnly": "bun run build",
+    "release": "npx bumpp --commit --tag --push && npm publish",
+    "example:dev": "npm -C examples/spa run dev",
+    "example:build": "npm -C examples/spa run build",
+    "example:serve": "npm -C examples/spa run serve",
+    "lint": "bunx --bun eslint .",
+    "lint:fix": "bunx --bun eslint . --fix",
+    "up": "npx taze major -l -I -w"
+  },
+  "peerDependencies": {
+    "typescript": "*",
+    "vite": "<4.0.0"
+  },
+  "dependencies": {
+    "debug": "^4.4.0",
+    "fast-glob": "^3.3.3",
+    "vue-component-meta": "^2.2.10"
+  },
+  "devDependencies": {
+    "@trailskr/eslint-config-trailskr": "^0.0.2",
+    "@types/debug": "^4.1.12",
+    "@types/node": "^20.17.30",
+    "bumpp": "^10.1.0",
+    "lint-staged": "^15.5.1",
+    "rollup": "^4.40.0",
+    "simple-git-hooks": "^2.12.1",
+    "taze": "^19.0.4",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.2"
+  },
+  "pnpm": {
+    "overrides": {},
+    "ignoredBuiltDependencies": [
+      "esbuild",
+      "unrs-resolver"
+    ],
+    "onlyBuiltDependencies": [
+      "simple-git-hooks"
+    ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}
