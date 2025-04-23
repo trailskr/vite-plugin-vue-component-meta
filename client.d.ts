@@ -1,7 +1,6 @@
-declare module 'virtual:vue-meta' {
+declare module '*.vue-meta' {
   import type { ComponentMeta } from 'vue-component-meta'
 
-  const metaMap: Record<string, ComponentMeta>
-
-  export default metaMap
+  export const meta: ComponentMeta
+  export default meta
 }

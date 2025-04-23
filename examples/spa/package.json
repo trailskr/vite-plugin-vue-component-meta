@@ -1,5 +1,6 @@
 {
   "name": "vite-plugin-vue-component-meta-example-spa",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "nodemon --watch ../../dist/index.js -x \"cross-env DEBUG=vite-plugin-vue-component-meta vite\"",
@@ -7,12 +8,12 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.10"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.5.0",
+    "@vitejs/plugin-vue": "^5.2.3",
     "cross-env": "^7.0.3",
-    "nodemon": "^3.0.1",
+    "nodemon": "^3.1.10",
     "vite": "^6.3.2",
     "vite-plugin-vue-component-meta": "workspace:*",
     "vue-component-meta": "^2.2.10"

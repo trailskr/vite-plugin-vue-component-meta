@@ -4,6 +4,9 @@
     "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "types": [
+      "vite/client"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true

@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/vite-plugin-vue-component-meta)](https://www.npmjs.com/package/vite-plugin-vue-component-meta)
 
-> Automatic vue components meta generator using [Vite](https://github.com/vitejs/vite)
+> Plugin that generates Vue components meta data using [vue-component-meta](https://github.com/vuejs/language-tools/tree/master/packages/component-meta)
 
 ## Getting Started
 
@@ -18,14 +18,26 @@ Add to your `vite.config.js`:
 // vite.config.ts
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-import componentMeta from 'vite-plugin-vue-component-meta'
+import vueComponentMeta from 'vite-plugin-vue-component-meta'
 
 export default defineConfig({
   plugins: [
     vue(),
-    componentMeta(),
+    vueComponentMeta(),
   ],
 })
+```
+
+Ensure you have .vue file type shim like this to vue-component-meta
+
+```ts
+// src/shims.d.ts
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue'
+
+  const component: DefineComponent<object, object, unknown>
+  export default component
+}
 ```
 
 Now you can import meta components of your vue components in `src/components` dir.
@@ -34,14 +46,21 @@ You can get it meta like this:
 
 ```ts
 // src/some.ts
-import metaMap from 'virtual:vue-meta'
+import { meta as myOtherComponentMeta } from './components/my-other-component.vue-meta'
+import myComponentMeta from './components/MyComponent.vue-meta'
 
-const meta = metaMap.MyComponent
+console.log(myComponentMeta)
+console.log(myOtherComponentMeta.props)
+
+// meta is shallow reactive object
+watch(myOtherComponentMeta, () => {
+  console.log('update')
+})
 ```
 
 ## Client Types
 
-If you want type definition of `virtual:vue-meta`, add `vite-plugin-vue-component-meta/client` to `compilerOptions.types` of your `tsconfig`:
+If you want type definition of `.vue-meta` files, add `vite-plugin-vue-component-meta/client` to `compilerOptions.types` of your `tsconfig`:
 
 ```json
 // tsconfig.json
@@ -56,20 +75,6 @@ If you want type definition of `virtual:vue-meta`, add `vite-plugin-vue-componen
 
 ```ts
 interface UserOptions {
-  /**
-   * Relative path to the directory to search for page components.
-   * @default 'src/components'
-   */
-  componentsDirs?: string | string[]
-  /**
-   * Valid file extensions for page components.
-   * @default ['vue']
-   */
-  extensions?: string[]
-  /**
-   * List of path globs to exclude when resolving pages.
-   */
-  exclude?: string[]
   /**
    * tsconfig path passed to vue-component-meta checker, default is './tsconfig.json'
    */
@@ -93,15 +98,12 @@ To use custom configuration, pass your options to ComponentsMeta when instantiat
 // vite.config.js
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-import componentMeta from 'vite-plugin-vue-component-meta'
+import vueComponentMeta from 'vite-plugin-vue-component-meta'
 
 export default defineConfig({
   plugins: [
     vue(),
-    componentMeta({
-      componentsDirs: ['src/ui', 'src/ui2'],
-      extensions: ['vue', 'tsx', 'jsx'],
-      exclude: ['src/ui/misc'],
+    vueComponentMeta({
       tsConfigPath: 'tsconfig.app.json',
       metaCheckerOptions: {
         forceUseTs: false,

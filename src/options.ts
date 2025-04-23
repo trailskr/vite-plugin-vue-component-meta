@@ -1,4 +1,5 @@
 import type { MetaCheckerOptions } from 'vue-component-meta'
+import { normalizePath } from 'vite'
 
 // from typescript
 enum NewLineKind {
@@ -10,20 +11,6 @@ enum NewLineKind {
  * Plugin options.
  */
 export type UserOptions = {
-  /**
-   * Relative path to the directory to search for page components.
-   * @default 'src/components'
-   */
-  componentsDirs?: string | string[]
-  /**
-   * Valid file extensions for page components.
-   * @default ['vue']
-   */
-  extensions?: string[]
-  /**
-   * List of path globs to exclude when resolving pages.
-   */
-  exclude?: string[]
   /**
    * tsconfig path passed to vue-component-meta checker, default is './tsconfig.json'
    */
@@ -41,15 +28,16 @@ export type UserOptions = {
 export type Options = Required<UserOptions>
 
 export const resolveOptions = (userOptions: UserOptions): Options => {
-  return Object.assign({
-    componentsDirs: 'src/components',
-    extensions: ['vue'],
-    exclude: [],
-    importMode: 'sync',
-    tsConfigPath: './tsconfig.json',
-    metaCheckerOptions: {
+  const {
+    tsConfigPath = './tsconfig.json',
+    metaCheckerOptions = {
       forceUseTs: true,
       printer: { newLine: NewLineKind.LineFeed },
     },
-  }, userOptions)
+  } = userOptions
+
+  return {
+    tsConfigPath: normalizePath(tsConfigPath),
+    metaCheckerOptions,
+  }
 }

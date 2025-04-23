@@ -1,11 +1,11 @@
 <script setup lang="ts">
 withDefaults(defineProps<{
-  /** Some other prop description */
+  /** Some other prop description 123 */
   someOtherProp?: number
   gameOver: { some: string }
   hello?: boolean
 }>(), {
-  someOtherProp: 4,
+  someOtherProp: 123,
 })
 </script>
 

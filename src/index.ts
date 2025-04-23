@@ -1,79 +1,113 @@
-import type { ModuleNode, Plugin, ResolvedConfig } from 'vite'
+/* eslint-disable no-restricted-globals */
+import type { Plugin, ResolvedConfig, ViteDevServer } from 'vite'
 import type { UserOptions } from './options'
 
-import { resolve } from 'node:path'
+import { dirname, relative } from 'node:path'
+import Debug from 'debug'
 import { normalizePath } from 'vite'
-import { getFilesFromPath } from './files'
-import { getClientCode } from './getClientCode'
+import { createChecker } from 'vue-component-meta'
 import { resolveOptions } from './options'
-import { debug, resolveDirs } from './utils'
 
 export type { UserOptions } from './options'
 
-const MODULE_ID = 'virtual:vue-meta'
-const MODULE_ID_VIRTUAL = '/@vite-plugin-vue-component-meta/vue-meta'
+export const relativeNorm = (...args: Parameters<typeof relative>) => {
+  return normalizePath(relative(...args))
+}
+
+export const debug = Debug('vite-plugin-vue-component-meta')
+
+const virtualModuleSuffix = '.vue-meta'
+const virtualModuleSuffixLen = virtualModuleSuffix.length
 
 export const vueComponentMeta = (userOptions: UserOptions = {}): Plugin => {
   const options = resolveOptions(userOptions)
+  debug('Resolved options %O', options)
 
   let config: ResolvedConfig
-  let componentsDirs: string[]
+  let checker: ReturnType<typeof createChecker>
+  let tsConfigDir: string
+  let devServer: ViteDevServer
 
   return {
     name: 'vite-plugin-vue-component-meta',
-    enforce: 'pre',
     configResolved(conf) {
       config = conf
-      componentsDirs = resolveDirs(options.componentsDirs, config.root)
     },
-    configureServer({ moduleGraph, watcher, ws }) {
-      watcher.add(options.componentsDirs)
+    configureServer(server) {
+      devServer = server
+      const { watcher, moduleGraph, hot } = server
+      debug('Creating meta checker using %o with options: %O', options.tsConfigPath, options.metaCheckerOptions)
+      checker = createChecker(options.tsConfigPath, options.metaCheckerOptions)
+      tsConfigDir = normalizePath(dirname(options.tsConfigPath))
+      debug('tsconfig dir %o', tsConfigDir)
 
-      const reloadModule = (module: ModuleNode, path = '*') => {
-        moduleGraph.invalidateModule(module)
-        ws?.send({
-          path,
-          type: 'full-reload',
+      watcher.on('change', (path: string) => {
+        const resolvedPath = relativeNorm(config.root, path)
+        debug('Change %o', resolvedPath)
+        const metaVirtualModuleId = `${resolvedPath}${virtualModuleSuffix}`
+        debug('Meta module file %o', metaVirtualModuleId)
+        const module = moduleGraph.getModuleById(metaVirtualModuleId)
+        if (!module) return
+
+        checker.clearCache()
+        debug('Reload %o', metaVirtualModuleId)
+        moduleGraph.invalidateModule(module, undefined, undefined, true)
+        const url = `/@id/${metaVirtualModuleId}`
+        hot.send({
+          type: 'update',
+          updates: [{
+            type: 'js-update',
+            timestamp: Date.now(),
+            path: url,
+            acceptedPath: url,
+          }],
         })
-      }
-
-      const updateVirtualModule = (path: string) => {
-        path = normalizePath(resolve(config.root, path))
-        debug('watcher %s', path)
-        debug('dirs %o', componentsDirs)
-        if (!componentsDirs.some((dir) => path.startsWith(dir))) return
-        debug('reload %s', path)
-        const module = moduleGraph.getModuleById(MODULE_ID_VIRTUAL)
-        if (module) reloadModule(module)
-      }
-
-      watcher.on('add', updateVirtualModule)
-      watcher.on('unlink', updateVirtualModule)
-      watcher.on('change', updateVirtualModule)
+      })
     },
-    resolveId(id) {
-      return id.startsWith(MODULE_ID)
-        ? MODULE_ID_VIRTUAL
-        : null
+    async resolveId(id, importer) {
+      if (!id.endsWith(virtualModuleSuffix)) return null
+      debug('Resolving module id %o from %o', id, importer)
+      const vueModuleId = `${id.slice(0, -virtualModuleSuffixLen)}.vue`
+      debug('Vue module id %o', vueModuleId)
+      const resolved = await this.resolve(vueModuleId, importer)
+      const path = resolved?.id.split('?')?.[0]
+      if (!path) {
+        debug('Vue module id %o is not found', vueModuleId)
+        return null
+      }
+      debug('Watching %o', path)
+      devServer.watcher.add(path)
+      const resolvedId = `${relativeNorm(config.root, path)}${virtualModuleSuffix}`
+
+      debug('Resolved id %o', resolvedId)
+      return resolvedId
     },
     async load(id) {
-      if (id !== MODULE_ID_VIRTUAL) return
-      const files: string[] = []
+      if (!id.endsWith(virtualModuleSuffix)) return null
 
-      for (const dir of componentsDirs) {
-        const path = dir[0] === '/'
-          ? normalizePath(dir)
-          : normalizePath(resolve(config.root, dir))
+      debug('Loading module id %o', id)
+      const filePath = id.slice(0, -virtualModuleSuffixLen)
+      debug('Vue file path %o', filePath)
+      const filePathRelative = relativeNorm(tsConfigDir, filePath)
+      debug('Getting meta for %o', filePathRelative)
+      const meta = checker.getComponentMeta(filePathRelative)
+      debug('Get meta data for %o', filePathRelative)
+      const metaJson = JSON.stringify(meta)
 
-        debug('Loading Components Dir: %s', path)
+      debug('Generating client code for %o', filePathRelative)
+      return `\
+import { shallowReactive } from 'vue'
+export const meta = shallowReactive(${metaJson});
+export default meta;
 
-        files.push(...await getFilesFromPath(path, options))
-
-        debug('Done loading Components Dir: %s', path)
-      }
-
-      debug('Generating client code')
-      return getClientCode(files, options.tsConfigPath, options.metaCheckerOptions)
+if (import.meta.hot) {
+  console.log('accept')
+  import.meta.hot.accept((newModule) => {
+    if (!newModule) return;
+    import.meta.hot.data.meta = Object.assign(import.meta.hot.data.meta ?? meta, newModule.meta);
+  });
+}
+`
     },
   }
 }

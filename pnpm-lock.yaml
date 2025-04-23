@@ -11,9 +11,6 @@ importers:
       debug:
         specifier: ^4.4.0
         version: 4.4.0(supports-color@5.5.0)
-      fast-glob:
-        specifier: ^3.3.3
-        version: 3.3.3
       vue-component-meta:
         specifier: ^2.2.10
         version: 2.2.10(typescript@5.8.3)
@@ -55,18 +52,18 @@ importers:
   examples/spa:
     dependencies:
       vue:
-        specifier: ^3.3.10
+        specifier: ^3.5.13
         version: 3.5.13(typescript@5.8.3)
     devDependencies:
       '@vitejs/plugin-vue':
-        specifier: ^4.5.0
-        version: 4.6.2(vite@6.3.2(@types/node@20.17.30)(jiti@2.4.2)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))
+        specifier: ^5.2.3
+        version: 5.2.3(vite@6.3.2(@types/node@20.17.30)(jiti@2.4.2)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
       nodemon:
-        specifier: ^3.0.1
-        version: 3.1.9
+        specifier: ^3.1.10
+        version: 3.1.10
       vite:
         specifier: ^6.3.2
         version: 6.3.2(@types/node@20.17.30)(jiti@2.4.2)(yaml@2.7.1)
@@ -825,11 +822,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@vitejs/plugin-vue@4.6.2':
-    resolution: {integrity: sha512-kqf7SGFoG+80aZG6Pf+gsZIVvGSCKE98JbiWqcCV9cThtg91Jav0yvYFC9Zb+jKetNGF6ZKeoaxgZfND21fWKw==}
-    engines: {node: ^14.18.0 || >=16.0.0}
+  '@vitejs/plugin-vue@5.2.3':
+    resolution: {integrity: sha512-IYSLEQj4LgZZuoVpdSUCw3dIynTWQgPlaRP6iAvMle4My0HdYwr5g5wQAfwOeHQBmYwEkqF70nRpSilr6PoUDg==}
+    engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
-      vite: ^4.0.0 || ^5.0.0
+      vite: ^5.0.0 || ^6.0.0
       vue: ^3.2.25
 
   '@vitest/eslint-plugin@1.1.43':
@@ -2209,8 +2206,8 @@ packages:
   node-releases@2.0.19:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
 
-  nodemon@3.1.9:
-    resolution: {integrity: sha512-hdr1oIb2p6ZSxu3PB2JWWYS7ZQ0qvaZsc3hK8DR8f02kRzc8rjYmxAIvdz+aYC+8F2IjNaB7HMcSDg8nQpJxyg==}
+  nodemon@3.1.10:
+    resolution: {integrity: sha512-WDjw3pJ0/0jMFmyNDp3gvY2YizjLmmOUQo6DEBY+JgdvW/yQ9mEeSw6H5ythl5Ny2ytb7f9C2nIbjSxMNzbJXw==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -3726,7 +3723,7 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.6.4':
     optional: true
 
-  '@vitejs/plugin-vue@4.6.2(vite@6.3.2(@types/node@20.17.30)(jiti@2.4.2)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))':
+  '@vitejs/plugin-vue@5.2.3(vite@6.3.2(@types/node@20.17.30)(jiti@2.4.2)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))':
     dependencies:
       vite: 6.3.2(@types/node@20.17.30)(jiti@2.4.2)(yaml@2.7.1)
       vue: 3.5.13(typescript@5.8.3)
@@ -5489,7 +5486,7 @@ snapshots:
 
   node-releases@2.0.19: {}
 
-  nodemon@3.1.9:
+  nodemon@3.1.10:
     dependencies:
       chokidar: 3.6.0
       debug: 4.4.0(supports-color@5.5.0)
