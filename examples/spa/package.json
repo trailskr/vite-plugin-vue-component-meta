@@ -2,20 +2,21 @@
   "name": "vite-plugin-vue-component-meta-example-spa",
   "type": "module",
   "private": true,
+  "packageManager": "bun@1.2.10",
   "scripts": {
-    "dev": "nodemon --watch ../../dist/index.js -x \"cross-env DEBUG=vite-plugin-vue-component-meta vite\"",
-    "build": "cross-env DEBUG=vite-plugin-vue-component-meta vite build",
-    "serve": "vite preview"
+    "dev": "DEBUG=vite-plugin-vue-component-meta vite",
+    "build": "DEBUG=vite-plugin-vue-component-meta vite build",
+    "serve": "vite preview",
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
-    "cross-env": "^7.0.3",
-    "nodemon": "^3.1.10",
-    "vite": "^6.3.2",
-    "vite-plugin-vue-component-meta": "workspace:*",
-    "vue-component-meta": "^2.2.10"
+    "vite": "^6.3.3",
+    "vite-plugin-vue-component-meta": "link:vite-plugin-vue-component-meta",
+    "vue-component-meta": "^2.2.10",
+    "vue-tsc": "^2.2.10"
   }
 }

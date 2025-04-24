@@ -101,7 +101,6 @@ export const meta = shallowReactive(${metaJson});
 export default meta;
 
 if (import.meta.hot) {
-  console.log('accept')
   import.meta.hot.accept((newModule) => {
     if (!newModule) return;
     import.meta.hot.data.meta = Object.assign(import.meta.hot.data.meta ?? meta, newModule.meta);

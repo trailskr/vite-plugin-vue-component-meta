@@ -1,3 +1,4 @@
+import type { Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import componentMeta from 'vite-plugin-vue-component-meta'
@@ -6,6 +7,6 @@ import componentMeta from 'vite-plugin-vue-component-meta'
 export default defineConfig({
   plugins: [
     vue(),
-    componentMeta(),
+    componentMeta() as Plugin,
   ],
 })
