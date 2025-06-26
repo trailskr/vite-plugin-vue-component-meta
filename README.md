@@ -81,8 +81,12 @@ interface UserOptions {
   tsConfigPath?: string
   /**
    * vue-component-meta MetaCheckerOptions,
-   * default is: {
+   * @default {
    *   forceUseTs: true,
+   *   noDeclarations: true,
+   *   schema: {
+   *     ignore: [() => true],
+   *   },
    *   printer: { newLine: NewLineKind.LineFeed },
    * }
    */
@@ -107,6 +111,11 @@ export default defineConfig({
       tsConfigPath: 'tsconfig.app.json',
       metaCheckerOptions: {
         forceUseTs: false,
+        noDeclarations: true,
+        schema: {
+          ignore: [() => true],
+        },
+        printer: { newLine: NewLineKind.LineFeed },
       }
     }),
   ],

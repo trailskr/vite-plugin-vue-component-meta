@@ -1,12 +1,6 @@
 import type { MetaCheckerOptions } from 'vue-component-meta'
 import { normalizePath } from 'vite'
 
-// from typescript
-enum NewLineKind {
-  CarriageReturnLineFeed = 0,
-  LineFeed = 1,
-}
-
 /**
  * Plugin options.
  */
@@ -17,8 +11,12 @@ export type UserOptions = {
   tsConfigPath?: string
   /**
    * vue-component-meta MetaCheckerOptions,
-   * default is: {
+   * @default {
    *   forceUseTs: true,
+   *   noDeclarations: true,
+   *   schema: {
+   *     ignore: [() => true],
+   *   },
    *   printer: { newLine: NewLineKind.LineFeed },
    * }
    */
@@ -32,7 +30,11 @@ export const resolveOptions = (userOptions: UserOptions): Options => {
     tsConfigPath = './tsconfig.json',
     metaCheckerOptions = {
       forceUseTs: true,
-      printer: { newLine: NewLineKind.LineFeed },
+      noDeclarations: true,
+      schema: {
+        ignore: [() => true],
+      },
+      printer: { newLine: 1 }, // NewLineKind.LineFeed from typescript
     },
   } = userOptions
 
