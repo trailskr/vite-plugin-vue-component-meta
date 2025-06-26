@@ -2,8 +2,12 @@
   "typescript.tsdk": "node_modules/typescript/lib",
 
   "cSpell.words": [
+    "bumpp",
+    "bunx",
     "Stringifier",
-    "trailskr"
+    "taze",
+    "trailskr",
+    "tsdown"
   ],
 
   // Disable the default formatter, use eslint instead
