@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-vue-component-meta",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "packageManager": "bun@1.2.21",
   "description": "Plugin that generates Vue components meta data using vue-component-meta",
   "author": "trailskr",
