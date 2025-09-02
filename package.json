@@ -2,7 +2,7 @@
   "name": "vite-plugin-vue-component-meta",
   "type": "module",
   "version": "0.0.4",
-  "packageManager": "bun@1.2.17",
+  "packageManager": "bun@1.2.21",
   "description": "Plugin that generates Vue components meta data using vue-component-meta",
   "author": "trailskr",
   "license": "MIT",
@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "dev": "npm run build -- --watch",
-    "build": "tsdown src/index.ts --clean --dts --format esm",
+    "build": "tsup src/index.ts --clean --dts --format esm",
     "prepublishOnly": "bun run build",
     "release": "bumpp --commit --tag --push && npm publish",
     "example:dev": "npm -C examples/spa run dev",
@@ -48,20 +48,20 @@
   },
   "dependencies": {
     "debug": "^4.4.1",
-    "vue-component-meta": "^2.2.10"
+    "vue-component-meta": "^3.0.6"
   },
   "devDependencies": {
     "@trailskr/eslint-config-trailskr": "^0.0.7",
     "@types/debug": "^4.1.12",
-    "@types/node": "^22.15.33",
-    "bumpp": "^10.2.0",
-    "lint-staged": "^16.1.2",
-    "rollup": "^4.44.1",
-    "simple-git-hooks": "^2.13.0",
-    "taze": "^19.1.0",
-    "tsdown": "^0.12.9",
-    "typescript": "^5.8.3",
-    "vite": "^7.0.0"
+    "@types/node": "^22.18.0",
+    "bumpp": "^10.2.3",
+    "lint-staged": "^16.1.6",
+    "rollup": "^4.50.0",
+    "simple-git-hooks": "^2.13.1",
+    "taze": "^19.4.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.4"
   },
   "simple-git-hooks": {
     "pre-commit": "bunx lint-staged"
